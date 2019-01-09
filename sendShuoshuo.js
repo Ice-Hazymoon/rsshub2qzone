@@ -80,6 +80,7 @@ module.exports = function (shuoshuo, photos) {
                     photos.splice(0, 9)
                 }
                 await input.uploadFile(...photos);
+                await timeout(photos.length * 1000);
             }
 
             await page.click('#form-0-submit');
