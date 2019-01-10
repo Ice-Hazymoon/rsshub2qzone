@@ -93,7 +93,7 @@ module.exports = function (shuoshuo, photos) {
                     await browser.close();
                     resolve();
                 }else{
-                    if(time>15){
+                    if(time>60){
                         clearInterval(verifySS);
                         await browser.close();
                         reject('说说发送超时');
