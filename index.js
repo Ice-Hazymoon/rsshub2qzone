@@ -53,7 +53,7 @@ function grss(config, timeout) {
                     }
 
                     // 解析HTML
-                    const $ = cheerio.load(feed.items[0].content);
+                    const $ = cheerio.load(feed.items[0].content.replace(/<br>/g, '\n'));
 
                     let imgArr = new Array();
 
