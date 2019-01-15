@@ -95,7 +95,7 @@ function grss(config, timeout) {
                     }
                     const message = {
                         text: `${config.name}更新推送`,
-                        content: feed.items[0].contentSnippet,
+                        content: $.text(),
                         url: feed.items[0].link,
                         date: dayjs(feed.items[0].pubDate).format('YY年M月D日HH:mm:ss')
                     }
