@@ -9,6 +9,7 @@ const fs = require('fs');
 const fileType = require('file-type');
 const path = require('path');
 const del = require('del');
+const schedule = require('node-schedule');
 
 const sendShuoshuo = require('./sendShuoshuo');
 
@@ -20,10 +21,8 @@ const log = (log) => {
 let upTime = new Object(); // 保存rss每次拉取的时间
 const baseURL = 'https://rsshub.app';
 
-function grss(config, timeout) {
-    if (!timeout) timeout = 1000 * 60 * 5;
-    if (!upTime[config.name]) timeout = 1000 * 60 * 1;
-    setTimeout(() => {
+function grss(config) {
+    schedule.scheduleJob('*/2 * * * *', function(){
         rp.get(baseURL + config.url, {
             timeout: 1000 * 60,
             qs: {
@@ -39,7 +38,6 @@ function grss(config, timeout) {
                 if (!upTime[config.name]) { // 如果不存在说明是第一次请求
                     log('首次请求' + config.name);
                     upTime[config.name] = date_published;
-                    grss(config);
                     return false;
                 }
 
@@ -48,7 +46,6 @@ function grss(config, timeout) {
 
                     if (feed.items[0].title.search('Re') !== -1) { // 如果是回复类型的推文则不推送
                         log('回复推文，不推送');
-                        grss(config);
                         return false;
                     }
 
@@ -89,7 +86,6 @@ function grss(config, timeout) {
                             });
                         } catch (error) {
                             log(config.name + '：图片抓取失败' + error);
-                            grss(config, 1000 * 60 * 1);
                             return false;
                         }
                     }
@@ -110,23 +106,19 @@ function grss(config, timeout) {
                         .then(() => {
                             log(config.name + '更新发送成功');
                             upTime[config.name] = date_published;
-                            grss(config);
                             del.sync(imgArr);
                         }).catch(error => {
                             log(config.name + ' 更新发送失败：' + error);
-                            grss(config, 1000 * 60 * 1);
                             del.sync(imgArr);
                         })
                 } else { //没有更新
                     log(config.name + ' 没有更新  最后更新于：' + dayjs(feed.items[0].pubDate).format('YY年M月D日HH:mm:ss'));
-                    grss(config);
                 }
             })
             .catch(error => {
                 log(config.name + '请求RSSHub失败' + error);
-                grss(config, 1000 * 60 * 1);
             })
-    }, timeout);
+    })
 };
 
 credentials.urls.forEach((config, index) => {
