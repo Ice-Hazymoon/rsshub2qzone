@@ -736,11 +736,17 @@ sax@>=0.6.0:
   version "1.2.4"
   resolved "http://registry.npm.taobao.org/sax/download/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
-socks5-client@~1.2.3:
+socks5-client@~1.2.3, socks5-client@~1.2.6:
   version "1.2.6"
   resolved "http://registry.npm.taobao.org/socks5-client/download/socks5-client-1.2.6.tgz#05b7d695bcdce56d2cbcde2c8d731c20cf87a253"
   dependencies:
     ip-address "~5.8.0"
+
+socks5-http-client@^1.0.4:
+  version "1.0.4"
+  resolved "http://registry.npm.taobao.org/socks5-http-client/download/socks5-http-client-1.0.4.tgz#cfaaa993f91df58542806b458372c6fb3c1a32bd"
+  dependencies:
+    socks5-client "~1.2.6"
 
 socks5-https-client@^1.2.1:
   version "1.2.1"

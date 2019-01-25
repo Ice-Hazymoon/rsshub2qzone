@@ -70,7 +70,7 @@ module.exports = function (shuoshuo, photos) {
             await page.type('.write-text.J_textareaWrapper textarea', shuoshuo);
 
             // 如果有图片
-            if (photos.length > 0) {
+            if (photos.length) {
                 // 上传高清图片
                 await page.click('.ui-switch');
                 const input = await page.$('#addphoto');
