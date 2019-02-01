@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
 const credentials = require('./credentials');
 const shuoshuo = '测试说说';
 const photos = ['./tmp/1.jpg', './tmp/2.jpg', './tmp/3.jpg'];
@@ -57,9 +58,10 @@ const photos = ['./tmp/1.jpg', './tmp/2.jpg', './tmp/3.jpg'];
         await timeout(5000);
 
         let loginStatus = await page.content();
-        if (loginStatus.indexOf(credentials.username) != -1) {
+        let $ = cheerio.load(loginStatus);
+        if($('#feed_list_cot_all > .feed').length){
             console.log('登陆成功');
-        } else {
+        }else{
             console.log('登陆失败');
             return false;
         }
@@ -92,23 +94,22 @@ const photos = ['./tmp/1.jpg', './tmp/2.jpg', './tmp/3.jpg'];
             if(html.indexOf('说说发表成功') !== -1){
                 clearInterval(verifySS);
                 await browser.close();
-                resolve();
+                console.log('说说发表成功')
+                await page.screenshot({path: './发送成功.jpg'})
             }else{
                 if(time>15){
                     clearInterval(verifySS);
                     await browser.close();
-                    reject('说说发送超时');
+                    console.log('说说发送超时');
+                    await page.screenshot({path: './发送失败.jpg'})
                     return false;
                 }else{
                     time++;
                 }
             }
         }, 1000)
-
-        await page.screenshot({path: './发送成功.jpg'})
-        await browser.close();
     } catch (error) {
-        console.log(error)
+        console.log(error.stack)
         await browser.close();
     }
 })()

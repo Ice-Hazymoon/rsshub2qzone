@@ -125,7 +125,7 @@ function grss(config) {
                     }
                     const  message = {
                         text: `${config.name}更新推送`,
-                        content: posterArr.length ? `${$.text()}\n${$('video').length}个视频，点击原链接查看` : $.text(),
+                        content: $('video').length ? `${$.text()}\n${$('video').length}个视频，点击原链接查看` : $.text(),
                         url: feed.items[0].link,
                         date: dayjs(feed.items[0].pubDate).format('YY年M月D日HH:mm:ss')
                     }

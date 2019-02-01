@@ -1,7 +1,9 @@
 const puppeteer = require('puppeteer');
+const cheerio = require('cheerio');
 const credentials = require('./credentials');
 module.exports = function (shuoshuo, photos) {
     return new Promise(async (resolve, reject) => {
+
         const timeout = function (delay) {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -55,9 +57,10 @@ module.exports = function (shuoshuo, photos) {
             await timeout(5000);
 
             let loginStatus = await page.content();
-            if (loginStatus.indexOf(credentials.username) != -1) {
+            let $ = cheerio.load(loginStatus);
+            if($('#feed_list_cot_all > .feed').length){
                 console.log('登陆成功');
-            } else {
+            }else{
                 console.log('登陆失败');
                 reject('登陆失败');
                 return false;
@@ -105,7 +108,7 @@ module.exports = function (shuoshuo, photos) {
             }, 1000)
 
         } catch (error) {
-            console.log(error)
+            console.log(error.stack)
             await browser.close();
             reject(error);
         }
